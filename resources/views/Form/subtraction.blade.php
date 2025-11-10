@@ -12,7 +12,15 @@
 
     <div
         style="background:#ffffff; border-radius:15px; box-shadow:0 10px 25px rgba(0,0,0,0.15); padding:30px 40px; width:350px; text-align:center;">
-        <h2 style="margin-top:0; color:#333; letter-spacing:1px;">🧮 Subtraction</h2>
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+            <a href="/"
+                style="text-decoration:none; color:white; background-color:lightseagreen; padding:6px 12px; border-radius:6px; font-size:14px; font-weight:600; box-shadow:0 2px 6px rgba(0,0,0,0.2); transition:0.3s;"
+                onmouseover="this.style.backgroundColor='#20b2aa'; this.style.boxShadow='0 4px 10px rgba(32,178,170,0.4)';"
+                onmouseout="this.style.backgroundColor='lightseagreen'; this.style.boxShadow='0 2px 6px rgba(0,0,0,0.2)';">
+                ← Back
+            </a>
+            <h2 style="margin:0; color:#333; letter-spacing:1px;">➖ Subtraction</h2>
+        </div>
 
         <form method="POST" action="{{ route('arithmetic.subtraction.calculate') }}" style="margin-top:25px;">
             @csrf
@@ -45,6 +53,14 @@
 
         @if (isset($result))
             <h3 style="color:#222;">Result: <span style="color:lightseagreen;">{{ $result }}</span></h3>
+
+            <button type="button"
+                style="width:100%; border:none; border-radius:8px; background-color:#ff4d4d; color:white; padding:12px 0; cursor:pointer; font-weight:bold; font-size:15px; transition:0.3s;"
+                onmouseover="this.style.backgroundColor='#b22222'; this.style.boxShadow='0 4px 10px rgba(178, 34, 34, 0.4)';"
+                onmouseout="this.style.backgroundColor='#ff4d4d'; this.style.boxShadow='none';"
+                onclick="window.location.href='{{ route('arithmetic.subtraction') }}'">
+                Reset
+            </button>
         @endif
     </div>
 
