@@ -1,13 +1,28 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LearningController;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 // Route::get('/', function () {
 //     return view('welcome');
 // });
 
 Route::get('/', [LearningController::class, 'index']);
+
+Route::group(['prefix' => 'auth'], function () {
+    Route::get('/login', [AuthController::class, 'index'])->name('login');
+    Route::post('/login', [AuthController::class, 'actionLogin'])->name('auth.action-login');
+});
+
+Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'preventBackHistory']], function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
+    Route::get('/', [DashboardController::class, 'home'])->name('admin.home');
+    Route::get('/users', [DashboardController::class, 'users'])->name('admin.users');
+    Route::get('/logout', [AuthController::class, 'logout'])->name('auth.logout');
+});
 
 Route::group(['prefix' => 'arithmetic'], function () {
     // Addition Route
