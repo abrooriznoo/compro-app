@@ -57,7 +57,7 @@
 
     <ul class="menu-inner py-1">
         <!-- Dashboard -->
-        <li class="menu-item">
+        <li class="menu-item active">
             <a href="{{ route('admin.home') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-home-circle"></i>
                 <div data-i18n="Analytics">Dashboard</div>
@@ -65,7 +65,7 @@
         </li>
 
         <!-- Layouts -->
-        <li class="menu-item">
+        <!-- <li class="menu-item">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-layout"></i>
                 <div data-i18n="Layouts">Layouts</div>
@@ -98,13 +98,38 @@
                     </a>
                 </li>
             </ul>
-        </li>
+        </li> -->
 
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Master Data</span>
         </li>
 
         <li class="menu-item">
+            <a href="{{ route('admin.users') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-user"></i>
+                <div data-i18n="Users">Users</div>
+            </a>
+        </li>
+
+        <li class="menu-header small text-uppercase">
+            <span class="menu-header-text">Master Content</span>
+        </li>
+
+        <li class="menu-item">
+            <a href="{{ route('admin.blogs') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-news"></i>
+                <div data-i18n="Blogs">Blogs</div>
+            </a>
+        </li>
+
+        <li class="menu-item">
+            <a href="{{ route('admin.categories') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-category"></i>
+                <div data-i18n="Categories">Categories</div>
+            </a>
+        </li>
+
+        <!-- <li class="menu-item">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-cog"></i>
                 <div data-i18n="Layouts">Accounts Settings</div>
@@ -117,42 +142,7 @@
                     </a>
                 </li>
             </ul>
-        </li>
-
-        <!-- <li class="menu-item">
-              <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bx-layout"></i>
-                <div data-i18n="Layouts">Layouts</div>
-              </a>
-
-              <ul class="menu-sub">
-                <li class="menu-item">
-                  <a href="layouts-without-menu.html" class="menu-link">
-                    <div data-i18n="Without menu">Without menu</div>
-                  </a>
-                </li>
-                <li class="menu-item">
-                  <a href="layouts-without-navbar.html" class="menu-link">
-                    <div data-i18n="Without navbar">Without navbar</div>
-                  </a>
-                </li>
-                <li class="menu-item">
-                  <a href="layouts-container.html" class="menu-link">
-                    <div data-i18n="Container">Container</div>
-                  </a>
-                </li>
-                <li class="menu-item">
-                  <a href="layouts-fluid.html" class="menu-link">
-                    <div data-i18n="Fluid">Fluid</div>
-                  </a>
-                </li>
-                <li class="menu-item">
-                  <a href="layouts-blank.html" class="menu-link">
-                    <div data-i18n="Blank">Blank</div>
-                  </a>
-                </li>
-              </ul>
-            </li> -->
+        </li> -->
 
 
         <!-- Misc -->

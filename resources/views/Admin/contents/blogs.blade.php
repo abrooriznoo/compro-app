@@ -1,6 +1,6 @@
 @extends('Admin.layouts.app')
 
-@section('title', 'Users Page')
+@section('title', 'Blogs Page')
 
 @section('contents')
     <nav aria-label="breadcrumb">
@@ -9,33 +9,17 @@
                 <a href="{{route('admin.home')}}">Home</a>
             </li>
             <li class="breadcrumb-item">
-                <a href="javascript:void(0);">Master Data</a>
+                <a href="javascript:void(0);">Master Content</a>
             </li>
-            <li class="breadcrumb-item active">Users Management</li>
+            <li class="breadcrumb-item active">Blogs Management</li>
         </ol>
     </nav>
     <div class="card p-2 shadow-lg">
         <div class="m-3 d-flex justify-content-between align-items-center">
-            <h3>Welcome to the Users Page</h3>
-            <button class="btn btn-primary shadow-lg" data-bs-toggle="modal" data-bs-target="#modalAddUser">+ Add
-                User</button>
+            <h3>Welcome to the Blogs Page</h3>
+            <button class="btn btn-primary shadow-lg" data-bs-toggle="modal" data-bs-target="#modalAddBlog">+ Add
+                Blog</button>
         </div>
-
-        <!-- <div class="m-3">
-                        @if(session('success'))
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                {{ session('success') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                            </div>
-                        @endif
-
-                        @if (session('error'))
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                {{ session('error') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                            </div>
-                        @endif
-                    </div> -->
 
         <div class="card p-2 m-3 shadow-lg">
             <div class="table-responsive"> <!-- Pembungkus responsif -->
@@ -43,31 +27,38 @@
                     <thead class="table-primary">
                         <tr>
                             <th>No.</th>
-                            <th>Name</th>
-                            <th>Email</th>
+                            <th>Title</th>
+                            <th>Content</th>
+                            <th>Category</th>
+                            <th>Created At</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @if ($users->isEmpty())
+                        @if ($blogs->isEmpty())
                             <tr>
                                 <td colspan="6" class="text-center text-muted py-4">
                                     No blogs available.
                                 </td>
                             </tr>
                         @else
-                            @foreach ($users as $index => $user)
+                            @foreach ($blogs as $index => $blog)
                                 <tr>
                                     <td>{{ $index + 1 }}.</td>
-                                    <td>{{ $user->name }}</td>
-                                    <td>{{ $user->email }}</td>
+                                    <td>{{ $blog->title }}</td>
+                                    <td>{{ Str::limit($blog->content, 50) }}</td> {{-- opsional: batasi konten panjang --}}
+                                    <td>{{ $blog->category->name ?? '-' }}</td>
+                                    <td>{{ $blog->created_at->format('Y-m-d') }}</td>
                                     <td>
                                         <div class="d-flex gap-2">
                                             <button class="btn btn-sm btn-light shadow-lg" data-bs-toggle="modal"
-                                                data-bs-target="#modalUserEdit{{ $user->id }}"><i class="bx bx-pencil"></i></button>
+                                                data-bs-target="#modalBlogEdit{{ $blog->id }}">
+                                                <i class="bx bx-pencil"></i>
+                                            </button>
                                             <button class="btn btn-sm btn-primary shadow-lg" data-bs-toggle="modal"
-                                                data-bs-target="#modalUserDelete{{ $user->id }}"><i
-                                                    class="bx bx-trash"></i></button>
+                                                data-bs-target="#modalBlogDelete{{ $blog->id }}">
+                                                <i class="bx bx-trash"></i>
+                                            </button>
                                         </div>
                                     </td>
                                 </tr>
@@ -78,41 +69,43 @@
             </div>
         </div>
 
-        @foreach ($users as $user)
+        @foreach ($blogs as $blog)
             <!-- Modal Edit -->
-            <div class="modal fade" id="modalUserEdit{{ $user->id }}" tabindex="-1" aria-hidden="true">
+            <div class="modal fade" id="modalBlogEdit{{ $blog->id }}" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="modalCenterTitle">Modal Edit</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <form action="{{ route('admin.users.update', $user->id) }}" method="POST">
+                        <form action="{{ route('admin.blogs.update', $blog->id) }}" method="POST">
                             @csrf
                             @method('PUT')
                             <div class="modal-body">
                                 <div class="row">
                                     <div class="col mb-3">
-                                        <label for="nameWithTitle" class="form-label">Name</label>
-                                        <input type="text" name="name" value="{{ $user->name }}" class="form-control">
+                                        <label for="titleWithTitle" class="form-label">Title</label>
+                                        <input type="text" name="title" value="{{ $blog->title }}" class="form-control">
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col mb-3">
-                                        <label for="emailWithTitle" class="form-label">Email</label>
-                                        <input type="email" name="email" value="{{ $user->email }}" class="form-control">
+                                        <label for="contentWithTitle" class="form-label">Content</label>
+                                        <textarea name="content" class="summernote"
+                                            class="form-control">{{ $blog->content }}</textarea>
                                     </div>
                                 </div>
-                                <div class="row g-2">
-                                    <div class="col mb-0">
-                                        <label class="form-label">Password</label>
-                                        <input type="password" name="password" class="form-control"
-                                            placeholder="Enter new password (optional)">
-                                    </div>
+                                <div class="row">
                                     <div class="col mb-3">
-                                        <label class="form-label">Confirm Password</label>
-                                        <input type="password" name="password_confirmation" class="form-control"
-                                            placeholder="Confirm new password">
+                                        <label for="categoryWithTitle" class="form-label">Category</label>
+                                        <select name="category_id" id="categoryWithTitle" class="form-control">
+                                            <option value="">-- Pilih Kategori --</option>
+                                            @foreach ($categories as $category)
+                                                <option value="{{ $category->id }}" {{ old('category_id', $blog->category_id ?? '') == $category->id ? 'selected' : '' }}>
+                                                    {{ $category->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -128,18 +121,18 @@
             </div>
 
             <!-- Modal Delete -->
-            <div class="modal fade" id="modalUserDelete{{ $user->id }}" tabindex="-1" aria-hidden="true">
+            <div class="modal fade" id="modalBlogDelete{{ $blog->id }}" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="modalCenterTitle">Modal Delete User</h5>
+                            <h5 class="modal-title" id="modalCenterTitle">Modal Delete Blog</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            Are you sure you want to delete user "{{ $user->name }}"?
+                            Are you sure you want to delete blog "{{ $blog->title }}"?
                         </div>
                         <div class="modal-footer">
-                            <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST">
+                            <form action="{{ route('admin.blogs.destroy', $blog->id) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
                                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
@@ -154,51 +147,46 @@
         @endforeach
 
         <!-- Modal Add -->
-        <div class="modal fade" id="modalAddUser" tabindex="-1" aria-hidden="true">
+        <div class="modal fade" id="modalAddBlog" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="modalCenterTitle">Modal Add User</h5>
+                        <h5 class="modal-title" id="modalCenterTitle">Modal Add Blog</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <form action="{{ route('admin.users.store') }}" method="POST">
+                    <form action="{{ route('admin.blogs.store') }}" method="POST">
                         <div class="modal-body">
                             @csrf
                             <div class="row">
                                 <div class="col mb-3">
-                                    <label for="nameWithTitle" class="form-label">Name</label>
-                                    <input type="text" name="name" class="form-control @error('name') is-invalid @enderror">
-                                    @error('name')
+                                    <label for="titleWithTitle" class="form-label">Title</label>
+                                    <input type="text" name="title"
+                                        class="form-control @error('title') is-invalid @enderror">
+                                    @error('title')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col mb-3">
-                                    <label for="emailWithTitle" class="form-label">Email</label>
-                                    <input type="email" name="email" value="{{ old('email') }}"
-                                        class="form-control @error('email') is-invalid @enderror">
-                                    @error('email')
+                                    <label for="contentWithTitle" class="form-label">Content</label>
+                                    <textarea name="content" class="summernote" class="form-control"></textarea>
+                                    @error('content')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
-                            <div class="row g-2">
-                                <div class="col mb-0">
-                                    <label for="passwordWithTitle" class="form-label">Password</label>
-                                    <input type="password" name="password"
-                                        class="form-control @error('password') is-invalid @enderror">
-                                    @error('password')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
+                            <div class="row">
                                 <div class="col mb-3">
-                                    <label for="confirmPassword" class="form-label">Confirm Password</label>
-                                    <input type="password" name="password_confirmation"
-                                        class="form-control @error('password_confirmation') is-invalid @enderror">
-                                    @error('password_confirmation')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                                    <label for="categoryWithTitle" class="form-label">Category</label>
+                                    <select name="category_id" id="categoryWithTitle" class="form-control">
+                                        <option value="">-- Pilih Kategori --</option>
+                                        @foreach ($categories as $category)
+                                            <option value="{{ $category->id }}">
+                                                {{ $category->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -212,5 +200,4 @@
                 </div>
             </div>
         </div>
-    </div>
 @endsection

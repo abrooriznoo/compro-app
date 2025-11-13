@@ -36,7 +36,7 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             // Authentication passed...
-            return redirect()->intended('admin/');
+            return redirect()->intended('admin/')->with('success', 'Welcome, ' . Auth::user()->name . '!');
         }
 
         // Authentication failed...
@@ -64,6 +64,6 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/auth/login');
+        return redirect('/');
     }
 }

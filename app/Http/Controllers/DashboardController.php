@@ -2,10 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Blogs;
+use App\Models\Categories;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
+    public function landing()
+    {
+        // return view('Admin.dashboard');
+        $blogs = Blogs::with('category')->get();
+
+        return view('index', compact('blogs'));
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -25,46 +36,23 @@ class DashboardController extends Controller
 
     public function users()
     {
-        return view('Admin.contents.users');
+        $users = User::all();
+
+        return view('Admin.contents.users', compact('users'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function blogs()
     {
-        //
+        $blogs = Blogs::with('category')->get();
+        $categories = Categories::all();
+
+        return view('Admin.contents.blogs', compact('blogs', 'categories'));
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function categories()
     {
-        //
-    }
+        $categories = Categories::all();
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return view('Admin.contents.categories', compact('categories'));
     }
 }
