@@ -151,6 +151,19 @@
       });
     </script>
 
+    <script>
+      document.querySelectorAll('.status-switch').forEach(function (switchEl) {
+        const label = switchEl.nextElementSibling;
+
+        // Set label saat load
+        label.textContent = switchEl.checked ? 'Published' : 'Draft';
+
+        // Update label saat diubah
+        switchEl.addEventListener('change', function () {
+          label.textContent = this.checked ? 'Published' : 'Draft';
+        });
+      });
+    </script>
 
     <script src="{{ asset('assets/vendor/js/menu.js') }}"></script>
     <!-- endbuild -->

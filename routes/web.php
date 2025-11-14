@@ -12,8 +12,9 @@ use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 // Route::get('/', function () {
 //     return view('welcome');
 // });
-
+// Public Routes
 Route::get('/', [DashboardController::class, 'landing']);
+Route::get('/blogs', [DashboardController::class, 'blogsLanding'])->name('blogs.landing');
 
 Route::group(['prefix' => 'auth'], function () {
     Route::get('/login', [AuthController::class, 'index'])->name('login');

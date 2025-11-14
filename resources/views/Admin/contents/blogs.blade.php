@@ -27,9 +27,12 @@
                     <thead class="table-primary">
                         <tr>
                             <th>No.</th>
+                            <th>Photo</th>
                             <th>Title</th>
+                            <th>Writer</th>
                             <th>Content</th>
                             <th>Category</th>
+                            <th>Status</th>
                             <th>Created At</th>
                             <th>Actions</th>
                         </tr>
@@ -45,9 +48,26 @@
                             @foreach ($blogs as $index => $blog)
                                 <tr>
                                     <td>{{ $index + 1 }}.</td>
+                                    <td>
+                                        @if($blog->photos)
+                                            @foreach(json_decode($blog->photos, true) as $photo)
+                                                <img src="{{ asset('storage/blogs_photos/' . trim($photo)) }}" alt="Blog Photo" width="100">
+                                            @endforeach
+                                        @else
+                                            <span class="text-muted">No Photos</span>
+                                        @endif
+                                    </td>
                                     <td>{{ $blog->title }}</td>
+                                    <td>{{ $blog->writer }}</td>
                                     <td>{{ Str::limit($blog->content, 50) }}</td> {{-- opsional: batasi konten panjang --}}
                                     <td>{{ $blog->category->name ?? '-' }}</td>
+                                    <td>
+                                        @if($blog->status == 1)
+                                            <span class="badge bg-success">Published</span>
+                                        @else
+                                            <span class="badge bg-secondary">Draft</span>
+                                        @endif
+                                    </td>
                                     <td>{{ $blog->created_at->format('Y-m-d') }}</td>
                                     <td>
                                         <div class="d-flex gap-2">
@@ -78,10 +98,33 @@
                             <h5 class="modal-title" id="modalCenterTitle">Modal Edit</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <form action="{{ route('admin.blogs.update', $blog->id) }}" method="POST">
+                        <form action="{{ route('admin.blogs.update', $blog->id) }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
                             <div class="modal-body">
+                                <!-- Preview Photos -->
+                                <div class="row">
+                                    <div class="col mb-3">
+                                        <label class="form-label">Current Photos</label>
+                                        <div class="d-flex flex-wrap gap-2">
+                                            @if($blog->photos)
+                                                @foreach(json_decode($blog->photos, true) as $photo)
+                                                    <img src="{{ asset('storage/blogs_photos/' . trim($photo)) }}" alt="Blog Photo"
+                                                        width="100">
+                                                @endforeach
+                                            @else
+                                                <span class="text-muted">No Photos</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col mb-3">
+                                        <label for="photosWithTitle" class="form-label">Photos</label>
+                                        <input type="file" name="photos[]" multiple
+                                            class="form-control @error('photos') is-invalid @enderror">
+                                    </div>
+                                </div>
                                 <div class="row">
                                     <div class="col mb-3">
                                         <label for="titleWithTitle" class="form-label">Title</label>
@@ -106,6 +149,22 @@
                                                 </option>
                                             @endforeach
                                         </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col mb-3">
+                                        <label class="form-label">Status</label>
+
+                                        {{-- Fallback jika switch OFF, maka status = 0 --}}
+                                        <input type="hidden" name="status" value="0">
+
+                                        <div class="form-check form-switch">
+                                            <input type="checkbox" class="form-check-input status-switch" name="status"
+                                                value="1" {{ isset($blog) && $blog->status == 1 ? 'checked' : '' }}>
+                                            <label class="form-check-label">
+                                                {{ isset($blog) && $blog->status == 1 ? 'Published' : 'Draft' }}
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -154,9 +213,19 @@
                         <h5 class="modal-title" id="modalCenterTitle">Modal Add Blog</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <form action="{{ route('admin.blogs.store') }}" method="POST">
+                    <form action="{{ route('admin.blogs.store') }}" method="POST" enctype="multipart/form-data">
                         <div class="modal-body">
                             @csrf
+                            <div class="row">
+                                <div class="col mb-3">
+                                    <label for="photosWithTitle" class="form-label">Photos</label>
+                                    <input type="file" name="photos[]" multiple
+                                        class="form-control @error('photos') is-invalid @enderror">
+                                    @error('photos')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="col mb-3">
                                     <label for="titleWithTitle" class="form-label">Title</label>
@@ -187,6 +256,21 @@
                                             </option>
                                         @endforeach
                                     </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col mb-3">
+                                    <label class="form-label">Status</label>
+
+                                    {{-- Fallback jika switch OFF, maka status = 0 --}}
+                                    <input type="hidden" name="status" value="0">
+
+                                    <div class="form-check form-switch">
+                                        <!-- Default checked = true -->
+                                        <input type="checkbox" class="form-check-input status-switch" name="status"
+                                            value="1" checked>
+                                        <label class="form-check-label">Published</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>

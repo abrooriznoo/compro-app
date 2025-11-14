@@ -11,6 +11,9 @@ class Blogs extends Model
         'slug',
         'content',
         'category_id',
+        'status',
+        'writer',
+        'photos',
     ];
 
     public function category()

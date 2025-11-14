@@ -11,10 +11,14 @@ class DashboardController extends Controller
 {
     public function landing()
     {
-        // return view('Admin.dashboard');
-        $blogs = Blogs::with('category')->get();
+        return view('index');
+    }
 
-        return view('index', compact('blogs'));
+    public function blogsLanding()
+    {
+        $blogs = Blogs::with('category')->where('status', 1)->get();
+
+        return view('Layouts.contents.blogs', compact('blogs'));
     }
 
     /**
